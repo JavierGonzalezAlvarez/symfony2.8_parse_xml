@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Api de prueba{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>                         
+            <div>
+                <div class="topnav">
+                <h2>Comparativa de Parseados</h2>                
+
+                <ol>
+                    <li><a href="{{ path('homepage') }}">Inicio</a></li>
+                    <li><a href="{{ path('cargar_fichero') }}">Cargar XML</a></li>
+                    
+                    <li><a href="#a">Simple XML</a></li>
+                    <li><a href="#a">DOM</a></li>
+                    <li><a href="#a">XML Reader</a></li>
+                    <li><a href="#a">XML Parser</a></li>                                 
+                 </ol>                
+                <br>                
+                <hr>
+            </div>                                       
+
+        {% block body %}  
+        {% endblock %}
+
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
