@@ -3,14 +3,13 @@
 {% block body %}
     <div id="wrapper">
         <div id="container">
-            <div id="api_post_bd">                
+            
                 <h2><span>Cargar Fichero XML</h2>
                 
-                {{ form_start(formulario) }}                    
+                {{ form_start(formulario, {'enctype':'multipart/form-data'} ) }}                    
                     
-                {{ form_end(formulario) }}
-                    
-            </div>           
+                {{ form_end(formulario) }}                    
+            
         </div>
     </div>
 {% endblock %}

@@ -10,6 +10,9 @@ use AppBundle\Services\CargarXml;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 class DefaultController extends Controller
 {
     /**
@@ -24,20 +27,88 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/leer_fichero", name="leer_fichero")
+     */
+    public function leerficheroAction(Request $request)
+    {                                                    
+        $nameFile = 'file:///home/javier/Desktop/cdv/parse_xml/app/Resources/Ficheros/RS_availability_no_soap.xml';        
+        //$nameFile = file_get_contents('../app/Resources/Ficheros/RS_availability.xml');                
+        if (file_exists($nameFile)) {            
+            $xml = simplexml_load_file($nameFile);                        
+
+           
+            $array_simple_xml = []; // array();   
+            
+            $z = 0;
+            for ($i = 0; $i < count($xml); $i++) {   
+
+                $j = 0;        
+                $z = count($xml->RoomStay[$i]->RoomRates[$j]->RoomRate);
+                while ($j < $z) 
+                {   
+                        foreach ($xml->RoomStay[$i]->BasicPropertyInfo  as $hotel)                 
+                        {                                                                       
+                        $HotelCode = $hotel->attributes()->HotelCode;                                    
+                        $array_simple_xml[] = $HotelCode;             
+                        //print_r( $HotelCode ."</br>");
+                        }                
+
+                    foreach ($xml->RoomStay[$i]->RoomRates->RoomRate[$j]->Rates->Rate as $elemento1)                 
+                        {   
+                            $NombreHabitacion = "";                                                   
+                            $NombreHabitacion = $elemento1->RateDescription->Text; 
+                            $Precio = $elemento1->Total->attributes()->AmountAfterTax;                                                                  
+                            $array_simple_xml[] = $NombreHabitacion;             
+                            $array_simple_xml[] = $Precio;             
+                            //print_r( $NombreHabitacion ."</br>");
+                            //print_r( $Precio ."</br>");            
+                        }                
+                    
+                        foreach ($xml->RoomStay[$i]->RoomRates->RoomRate[$j]->TPA_Extensions as $elemento2)                      
+                        {                                                                                
+                            $RegimenTarifa = $elemento2->Mealplan->attributes()->Category;                         
+                            $array_simple_xml[] = $RegimenTarifa;                                         
+                            //print_r( $RegimenTarifa ."</br>");
+                        }                
+                    
+                        //print_r("padre -". $i. " hijo-". $j);                
+                        //print_r( "<hr>");
+
+                        $j++;   
+                    }
+            }        
+            //var_dump($array_simple_xml);
+
+        } else {
+            exit('No se ha cargo el fichero o no existe');
+        }
+
+        //rcuperamos el servicio serializer
+        //$serializer = $this->get('serializer');
+        
+        return $this->render('default/read_file.html.twig', array(            
+            'data' => $array_simple_xml,           
+         ));                
+        
+    }
+
+    /**
      * @Route("/cargar", name="cargar_fichero")
      */
     public function cargar_ficheroAction(Request $request) //, CargarXml $cargarxml)
     {                            
         //lanzar el servicio
-        $cargarxml = $this->get('cargarxml');        
-        $objects = $cargarxml->loadFile();
+        //$cargarxml = $this->get('cargarxml');        
+        //$objects = $cargarxml->loadFile();
+                
 
-        $form = $this->createFormBuilder($objects)            
-            ->add('ficheroxml', FileType::class)            
+        //$form = $this->createFormBuilder($objects)            
+        $form = $this->createFormBuilder()            
+            ->add('ficheroxml', FileType::class, [ 'label' => 'Fichero XML'])            
             ->add('subir', SubmitType::class, array(
-                'label' => 'Subir fichero',
-                /*
-                'required' => false,                
+                'label' => 'Ejecutar',                                             
+               
+             /* 
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',
@@ -45,24 +116,32 @@ class DefaultController extends Controller
                             'application/xml',                            
                         ]])
                           ],
-                */
-                ))                        
-            ->getForm();
+               */
+
+                ))                       
+            ->getForm();            
 
              //formulario recibido de la vista        
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                /** @var UploadedFile $brochureFile */
-                //$brochureFile = $form->get('brochure')->getData();
-                $brochureFile = $form->getData();
-                if ($brochureFile) {
-                    $brochureFileName = $cargarxml->upload($brochureFile);
-                    $product->setBrochureFilename($brochureFileName);
-                }
+            $form->handleRequest($request);                                    
+
+            if ($form->isValid()) {
+            //if ($form->isSubmitted() && $form->isValid()) {
+                // /** @var UploadedFile $file */
+                $file = $form->get('ficheroxml')->getData();                                                
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);                           
+
+                if ($file) {
+                    //$cargarxml = $this->get('cargarxml');  
+                    //$fileName = $cargarxml->loadFile($file);                                      
+                    //dump($filename);
+                    return $this->redirectToRoute('homepage'); 
+                }              
             }
     
+            
+
         return $this->render('default/form_file.html.twig', [
-              //'dato' => $datos,
+            //'dato' => $datos,
             'formulario' => $form->createView(),
         ]);                
         

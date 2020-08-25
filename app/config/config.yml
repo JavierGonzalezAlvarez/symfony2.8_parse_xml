@@ -7,7 +7,7 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-    directorio: '%kernel.root_dir%/resources/ficheros'
+    directorio: '%kernel.root_dir%/parse_xml//app/resources/ficheros'
 
 framework:
     #esi: ~
@@ -30,6 +30,7 @@ framework:
         handler_id: ~
     fragments: ~
     http_method_override: true
+    serializer: { enable_annotations: true }
 
 # Twig Configuration
 twig:
