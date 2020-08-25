@@ -31,10 +31,11 @@ class DefaultController extends Controller
      */
     public function leerficheroAction(Request $request)
     {        
-             
-        
+                     
         $nameFile = 'file:///home/javier/Desktop/cdv/parse_xml/app/Resources/Ficheros/RS_availability_no_soap.xml';        
-        //$nameFile = file_get_contents('../app/Resources/Ficheros/RS_availability.xml');                
+        
+
+        //$nameFile = file_get_contents('/../Resources/Ficheros/RS_availability.xml');                
         if (file_exists($nameFile)) {            
             $xml = simplexml_load_file($nameFile);                        
             $array_simple_xml = []; 
