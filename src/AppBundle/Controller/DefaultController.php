@@ -30,15 +30,17 @@ class DefaultController extends Controller
      * @Route("/leer_fichero", name="leer_fichero")
      */
     public function leerficheroAction(Request $request)
-    {                                                    
+    {        
+             
+        
         $nameFile = 'file:///home/javier/Desktop/cdv/parse_xml/app/Resources/Ficheros/RS_availability_no_soap.xml';        
         //$nameFile = file_get_contents('../app/Resources/Ficheros/RS_availability.xml');                
         if (file_exists($nameFile)) {            
             $xml = simplexml_load_file($nameFile);                        
-
-           
-            $array_simple_xml = []; // array();   
+            $array_simple_xml = []; 
             
+            $tiempo_inicial = microtime(true);
+
             $z = 0;
             for ($i = 0; $i < count($xml); $i++) {   
 
@@ -79,15 +81,21 @@ class DefaultController extends Controller
             }        
             //var_dump($array_simple_xml);
 
+            $tiempo_final = microtime(true);
+            $tiempo = $tiempo_final - $tiempo_inicial;  
+            echo $tiempo. " segundos";
+
         } else {
             exit('No se ha cargo el fichero o no existe');
         }
 
-        //rcuperamos el servicio serializer
+
+        //recuperamos el servicio serializer
         //$serializer = $this->get('serializer');
         
         return $this->render('default/read_file.html.twig', array(            
-            'data' => $array_simple_xml,           
+            'data' => $array_simple_xml,
+            'eficiencia' => $tiempo,                     
          ));                
         
     }
