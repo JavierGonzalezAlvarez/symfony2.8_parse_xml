@@ -23,16 +23,24 @@ Entorno Linux Ubuntu 18.04
 Instalar composer:
 sudo apt install composer
 
+Instalar php7.2:
+sudo apt-get update
+sudo apt-get install php7.2
+sudo apt-get install php-xml
+sudo apt install openssl php-common php-curl php-json php-mbstring php-mysql php-xml php-zip
+
+
 Instalar proyecto:
 composer create-project symfony/framework-standard-edition parse_xml "2.8.*"
 
-Iniciar el servidor en symfony:
+Iniciar el servidor en symfony2.8:
 php app/console server:start
 
-1. Cargar datos. Servicio compartido por todas las librerías.
+Para cada paseado:
+1. Cargar datos. Manual/Popup 
 2. Leer los datos.
-3. Obtener los datos
-4. Calcular la eficiencia
+3. Obtener los datos.
+4. Calcular la eficiencia.
 
 
 
