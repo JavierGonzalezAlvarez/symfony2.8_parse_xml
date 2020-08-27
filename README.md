@@ -29,6 +29,11 @@ sudo apt-get install php7.2
 sudo apt-get install php-xml
 sudo apt install openssl php-common php-curl php-json php-mbstring php-mysql php-xml php-zip
 
+Añadir componente dom-crawler
+(https://symfony.com/doc/2.8/components/dom_crawler.html)
+composer require symfony/dom-crawler
+
+Aumentar el tiempo de ejecución en php.ini => max_execution_time = 120 (para ficheros pesados en DOM).
 
 Instalar proyecto:
 composer create-project symfony/framework-standard-edition parse_xml "2.8.*"

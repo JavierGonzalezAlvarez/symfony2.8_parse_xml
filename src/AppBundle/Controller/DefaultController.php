@@ -13,9 +13,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class DefaultController extends Controller
+use Symfony\Component\DomCrawler\Crawler;
 
-use \DOMDocument;
+class DefaultController extends Controller
 
 {
     /**
@@ -239,8 +239,9 @@ use \DOMDocument;
         $nameFile = 'file:///home/javier/Desktop/cdv/parse_xml/app/Resources/Ficheros/RS_availability.xml';                   
         if (file_exists($nameFile)) {                                      
                 $dom = new \DOMDocument();        
+                //$dom = new Crawler();        
                 //$dom->formatOutput = true;    
-                $dom->load("RS_availability.xml");            
+                $dom->load($nameFile);            
                 
                 $nodeList_1 = $dom->getElementsByTagName('Text'); 
                 $nodeList_2 = $dom->getElementsByTagName('BasicPropertyInfo');         
@@ -284,20 +285,15 @@ use \DOMDocument;
                     }                                        
                 }
                 echo "<hr>"; 
-             
-            
-            
-                $tiempo_inicial = microtime(true);
-                $array_simple_xml = [];    
-                         
+                                    
+                $tiempo_inicial = microtime(true);                                  
+                $tiempo = $tiempo_final - $tiempo_inicial;   
+                $array_simple_xml = [];                             
             
             } else {
                 exit('no se ha cargado el archivo');
             }
-            
-
-            $data = 1;
-            $eficiencia = 1;
+                                    
 
         return $this->render('default/read_file.html.twig', array(            
             'data' => $array_simple_xml,
