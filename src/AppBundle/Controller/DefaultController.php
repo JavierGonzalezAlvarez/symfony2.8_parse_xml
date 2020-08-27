@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DefaultController extends Controller
+
+use \DOMDocument;
+
 {
     /**
      * @Route("/", name="homepage")
@@ -233,8 +236,68 @@ class DefaultController extends Controller
      */
     public function leerficheroDomAction(Request $request)
     {                            
-        $data = 1;
-        $eficiencia = 1;
+        $nameFile = 'file:///home/javier/Desktop/cdv/parse_xml/app/Resources/Ficheros/RS_availability.xml';                   
+        if (file_exists($nameFile)) {                                      
+                $dom = new \DOMDocument();        
+                //$dom->formatOutput = true;    
+                $dom->load("RS_availability.xml");            
+                
+                $nodeList_1 = $dom->getElementsByTagName('Text'); 
+                $nodeList_2 = $dom->getElementsByTagName('BasicPropertyInfo');         
+                $nodeList_3 = $dom->getElementsByTagName('Total'); 
+                $nodeList_4 = $dom->getElementsByTagName('Mealplan'); 
+            
+                $contarRoomStay = $dom->getElementsByTagName('RoomStay'); 
+                $contarRoomRates = $dom->getElementsByTagName('RoomRate'); 
+                        
+                echo $contarRoomStay->length;
+                echo "<hr>"; 
+                echo $contarRoomRates->length;
+                echo "<hr>";                   
+            
+                foreach ($nodeList_1 as $node_1) {                   
+                    print $node_1->nodeName . " = " . $node_1->nodeValue;  
+                }     
+                echo "<hr>";        
+            
+                foreach ($nodeList_2 as $node_2) {    
+            
+                    if($node_2->hasAttribute('HotelCode')) {                         
+                        print $node_2->nodeName . " = " . $node_2->getAttribute('HotelCode');                                   
+                    }           
+                }
+                echo "<hr>";  
+                    
+                foreach ($nodeList_3 as $node_3) {   
+            
+                    if($node_3->hasAttribute('AmountAfterTax')) {             
+                        print $node_3->nodeName . " = " . $node_3->getAttribute('AmountAfterTax');                                               
+                    }   
+                }
+                echo "<hr>";      
+             
+                foreach ($nodeList_4 as $node_4) {                                               
+            
+                    if($node_4->hasAttribute('Category')) {                                     
+                        print $node_4->nodeName . " = " . $node_4->getAttribute('Category'); 
+                                    
+                    }                                        
+                }
+                echo "<hr>"; 
+             
+            
+            
+                $tiempo_inicial = microtime(true);
+                $array_simple_xml = [];    
+                         
+            
+            } else {
+                exit('no se ha cargado el archivo');
+            }
+            
+
+            $data = 1;
+            $eficiencia = 1;
 
         return $this->render('default/read_file.html.twig', array(            
             'data' => $array_simple_xml,
